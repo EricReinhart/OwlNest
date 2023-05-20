@@ -1,0 +1,13 @@
+.cache
+*.log
+env/
+.env
+src/*.egg-info
+lib
+lib64
+local.py
+*~
+*.pyc
+*.pyo
+.installed.cfg
+bin
