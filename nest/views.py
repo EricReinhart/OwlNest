@@ -4,12 +4,14 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout
 from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
 from django.views.generic import ListView
 from django.views.generic.edit import FormView, DeleteView
-from .forms import PostForm, CommentForm, SubscriptionForm, UserCreationForm
+from .forms import PostForm, CommentForm, SubscriptionForm, UserCreationForm, LoginForm
 from .models import User, Post, Comment, TagSubscription, Tag
 
 
@@ -25,7 +27,7 @@ class BestPostsListView(ListView):
         elif period == 'day':
             return Post.objects.filter(created_at__gte=timezone.now()-timezone.timedelta(days=1)).order_by('-karma')[:10]
         else:
-            return Post.objects.all().order_by('-karma')[:10]
+            return Post.objects.all().order_by('-karma', '-created_at')[:10]
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -34,7 +36,13 @@ class BestPostsListView(ListView):
         context['user_rating'] = None
         context['period'] = self.kwargs.get('period', 'day')
         if not context['best_posts'].count():
-            context['message'] = "No posts found for the selected period"
+            if self.kwargs.get('period', 'day') == 'week':
+                message = "Sorry, there were no posts in the last week!"
+            elif self.kwargs.get('period', 'day') == 'day':
+                message = "Sorry, there were no posts in the last day!"
+            else:
+                message = "Sorry, there are no posts yet!"
+            context['message'] = message
         else:
             context['message'] = ""
         if self.request.user.is_authenticated:
@@ -42,6 +50,18 @@ class BestPostsListView(ListView):
             context['user_rating'] = self.request.user.karma
         return context
 
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+    form_class = LoginForm
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Неправильный логин или пароль')
+        return super().form_invalid(form)
+    
+    def logout(self, request):
+        logout(request)
+        return redirect('login')
+    
 
 class RegisterView(SuccessMessageMixin, FormView):
     form_class = UserCreationForm

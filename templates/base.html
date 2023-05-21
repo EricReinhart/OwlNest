@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <!-- Header section with logo, search bar, login or username, feed button -->
+    <header>
+      <img src="{% static 'images/logo.png' %}" alt="Logo">
+      <form method="GET" action="{% url 'search_posts' %}">
+        <input type="text" name="q" placeholder="Search">
+        <button type="submit">Search</button>
+      </form>
+      {% if user.is_authenticated %}
+        <a href="{% url 'feed' %}">Feed</a>
+        <p>{{ user.username }}</p>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </header>
+
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <!-- Footer section with copyright notice -->
+    <footer>
+      <p>&copy; 2023 MySite. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

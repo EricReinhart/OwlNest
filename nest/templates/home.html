@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+  <!-- Buttons to switch between day, week, and all posts -->
+  <div>
+    <button{% if period == 'all' %} class="selected"{% endif %}><a href="{% url 'home' %}">All Posts</a></button>
+    <button{% if period == 'day' %} class="selected"{% endif %}><a href="{% url 'home' %}?period=day">Day</a></button>
+    <button{% if period == 'week' %} class="selected"{% endif %}><a href="{% url 'home' %}?period=week">Week</a></button>
+  </div>
+
+  <div class="post-grid">
+    {% for post in best_posts %}
+      <div class="post">
+        <a href="{% url 'post_detail' post.pk %}">
+          <img src="{{ post.image.url }}" alt="{{ post.title }}">
+          <h3>{{ post.title }}</h3>
+        </a>
+        <p>{{ post.author }} | {{ post.pub_date }}</p>
+        <p>{{ post.summary }}</p>
+      </div>
+    {% empty %}
+      {% if message %}
+        <p>{{ message }}</p>
+      {% else %}
+        <p>No posts found.</p>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Pagination links for navigating between pages -->
+  <div class="pagination">
+    {% if best_posts.has_previous %}
+      <a href="?period={{ period }}&page={{ best_posts.previous_page_number }}">previous</a>
+    {% endif %}
+    <span class="current-page">{{ best_posts.number }}</span>
+    {% if best_posts.has_next %}
+      <a href="?period={{ period }}&page={{ best_posts.next_page_number }}">next</a>
+    {% endif %}
+  </div>
+{% endblock %}

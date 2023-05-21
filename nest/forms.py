@@ -1,6 +1,7 @@
 from django import forms
 from .models import Post, Comment, TagSubscription, User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -20,6 +21,11 @@ class SubscriptionForm(forms.ModelForm):
         model = TagSubscription
         fields = ['tag']
 
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'placeholder': 'Username or email'})
+        self.fields['password'].widget.attrs.update({'placeholder': 'Password'})
 
 class UserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
