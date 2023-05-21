@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block css_files%} 
+    <link rel="stylesheet" href="{% static "login.css" %}">
+    <link rel="stylesheet" href="{% static "base.css" %}">
+{% endblock css_files %}
+
 {% block content %}
   <h2>Login</h2>
   <form method="post">

@@ -1,4 +1,9 @@
 {% load static %}
+
+{% block css_files%} 
+    <link rel="stylesheet" href="{% static "base.css" %}">
+{% endblock css_files %}
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,22 +11,30 @@
   </head>
   <body>
     <!-- Header section with logo, search bar, login or username, feed button -->
-    <header>
-      <img src="{% static 'images/logo.png' %}" alt="Logo">
-      <form method="GET" action="{% url 'search_posts' %}">
-        <input type="text" name="q" placeholder="Search">
-        <button type="submit">Search</button>
-      </form>
-      {% if user.is_authenticated %}
-        <a href="{% url 'feed' %}">Feed</a>
-        <p>{{ user.username }}</p>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-      {% else %}
-        <a href="{% url 'login' %}">Login</a>
-      {% endif %}
+    <header class="header">
+      <h1 id='name'>OwlNest</h1>
+      <div class="logo">
+        <a href="{% url "home" %}"><img id="logo" src="{% static "images/logo.png" %}" alt="logo"></a>
+      </div>
+      <div class="search-box">
+        <form method="GET" action="{% url 'search_posts' %}">
+          <input type="text" name="q" placeholder="Search">
+          <button type="submit">Search</button>
+      </div>
+      </div>
+      </form class="user-box">
+        {% if user.is_authenticated %}
+          <a href="{% url 'feed' %}">Feed</a>
+          <p>{{ user.username }}</p>
+          <p>{{ user.karma}}</p>
+          <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit">Logout</button>
+          </form>
+        </div>
+        {% else %}
+          <a href="{% url 'login' %}">Login</a>
+        {% endif %}
     </header>
 
     <main>

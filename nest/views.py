@@ -5,7 +5,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.views import LoginView
-from django.contrib.auth import logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import logout, login
 from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
@@ -13,6 +14,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import FormView, DeleteView
 from .forms import PostForm, CommentForm, SubscriptionForm, UserCreationForm, LoginForm
 from .models import User, Post, Comment, TagSubscription, Tag
+from django.contrib.auth.views import LogoutView
 
 
 class BestPostsListView(ListView):
@@ -58,14 +60,22 @@ class CustomLoginView(LoginView):
         messages.error(self.request, 'Неправильный логин или пароль')
         return super().form_invalid(form)
     
-    def logout(self, request):
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        return redirect('home')
+
+
+class CustomLogoutView(LogoutView):
+    next_page = 'home'
+
+    def dispatch(self, request, *args, **kwargs):
         logout(request)
-        return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
     
 
 class RegisterView(SuccessMessageMixin, FormView):
     form_class = UserCreationForm
-    template_name = 'registration/register.html'
+    template_name = 'register.html'
     success_url = reverse_lazy('login')
     success_message = "Your account has been created. Please log in."
 
