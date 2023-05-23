@@ -2,6 +2,7 @@ from django import forms
 from .models import Post, Comment, TagSubscription, User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.files.images import ImageFile
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -28,9 +29,9 @@ class LoginForm(AuthenticationForm):
         self.fields['password'].widget.attrs.update({'placeholder': 'Password'})
 
 class UserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, help_text='Required. Enter a valid email address.')
-    username = forms.CharField(max_length=30, required=True, help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.')
-    karma = forms.IntegerField(required=True, widget=forms.HiddenInput(), initial=0)
+    email = forms.EmailField(required=True)
+    username = forms.CharField(max_length=30, required=True)
+    karma = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     avatar = forms.ImageField(required=False)
 
     class Meta:
@@ -48,3 +49,11 @@ class UserCreationForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('This email address is already taken.')
         return email
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.username = self.cleaned_data['username']
+        if commit:
+            user.save()
+        return user

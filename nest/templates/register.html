@@ -2,16 +2,16 @@
 {% load static %}
 
 {% block css_files%} 
-    <link rel="stylesheet" href="{% static "login.css" %}">
+    <link rel="stylesheet" href="{% static "register.css" %}">
     <link rel="stylesheet" href="{% static "base.css" %}">
 {% endblock css_files %}
 
 {% block content %}
-<div class="form-wrapper-login">
-  <h2>Login</h2>
-  <form method="post">
+<div class="form-wrapper-register">
+  <h2>Registration</h2>
+  <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ register_form.as_p }} 
     {% if request.method == 'POST' and form.errors %}
       <div class="alert alert-danger">
         <strong>Oops!</strong> Please, correct the mistakes below:
@@ -24,11 +24,7 @@
         </ul>
       </div>
     {% endif %}
-    <button type="submit">Login</button>
+    <button type="submit">Register</button>
   </form>
-  <form method="post" action="{% url 'register' %}">
-    {% csrf_token %}
-    <button id="Register" type="submit">Registration</button>
-</form>
 </div>
 {% endblock %}

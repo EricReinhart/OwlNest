@@ -29,6 +29,12 @@ class User(AbstractUser):
         self.karma += points
         self.save()
 
+    def get_avatar(self):
+        if self.avatar:
+            return self.avatar.url
+        else:
+            return '/static/images/default_avatar.jpg'
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=80, unique=True)

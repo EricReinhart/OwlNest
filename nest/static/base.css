@@ -3,7 +3,9 @@ html {
     font-family: 'Cormorant Garamond', serif;
   }
 
-
+.body{
+  margin: 0;
+}
 .header {
   margin: 0;
   display: flex;
@@ -20,6 +22,11 @@ html {
   font-weight: 1500;
 }
 #logo {
+  width: 50px;
+  height: 50px;
+}
+
+#avatar {
   width: 50px;
   height: 50px;
 }
@@ -64,4 +71,30 @@ html {
 
 .user-box .username {
   margin-right: 10px;
+}
+
+#login {
+  border: 8px solid rgb(122, 122, 122);
+  background-color: white; 
+  color: #967b9c;
+  border-radius: 40px;
+  font-size: 25px;
+  font-weight: 700;
+  text-decoration: none;
+  width: 100px;
+  align-items: center;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+#logout{
+  border: 8px solid rgb(122, 122, 122);
+  background-color: white; 
+  color: #967b9c;
+  border-radius: 40px;
+  font-size: 25px;
+  font-weight: 700;
+  text-decoration: none;
+  width: 100px;
+  align-items: center;
+  font-family: 'Cormorant Garamond', serif;
 }

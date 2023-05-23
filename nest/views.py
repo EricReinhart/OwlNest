@@ -71,17 +71,18 @@ class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         logout(request)
         return super().dispatch(request, *args, **kwargs)
-    
 
-class RegisterView(SuccessMessageMixin, FormView):
-    form_class = UserCreationForm
-    template_name = 'register.html'
-    success_url = reverse_lazy('login')
-    success_message = "Your account has been created. Please log in."
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+def register_request(request):
+	if request.method == "POST":
+		form = UserCreationForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			login(request, user)
+			messages.success(request, "Registration successful." )
+			return redirect("home")
+		messages.error(request, "Unsuccessful registration. Invalid information.")
+	form = UserCreationForm()
+	return render (request=request, template_name="register.html", context={"register_form":form})
 
 class CreatePostView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Post

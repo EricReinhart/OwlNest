@@ -13,7 +13,7 @@
     <!-- Header section with logo, search bar, login or username, feed button -->
     <header class="header">
       <h1 id='name'>OwlNest</h1>
-      <div class="logo">
+      <div>
         <a href="{% url "home" %}"><img id="logo" src="{% static "images/logo.png" %}" alt="logo"></a>
       </div>
       <div class="search-box">
@@ -27,13 +27,16 @@
           <a href="{% url 'feed' %}">Feed</a>
           <p>{{ user.username }}</p>
           <p>{{ user.karma}}</p>
+          <div>
+            <img id="avatar" src="{{ user.get_avatar }}" alt="ava">
+          </div>
           <form method="post" action="{% url 'logout' %}">
               {% csrf_token %}
-              <button type="submit">Logout</button>
+              <button id="logout" type="submit">Logout</button>
           </form>
         </div>
         {% else %}
-          <a href="{% url 'login' %}">Login</a>
+          <a id="login" href="{% url 'login' %}">Login</a>
         {% endif %}
     </header>
 
