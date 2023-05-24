@@ -4,3 +4,4 @@ djangorestframework==3.11.2
 django-rest-auth
 split-settings
 Pillow
+django-embed-video

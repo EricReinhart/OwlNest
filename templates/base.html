@@ -24,17 +24,19 @@
       </div>
       </form class="user-box">
         {% if user.is_authenticated %}
+          <form action="{% url 'create_post' %}">
+            <button id="CreatePost" type="submit">Create Post</button>
+          </form>
           <a href="{% url 'feed' %}">Feed</a>
           <p>{{ user.username }}</p>
-          <p>{{ user.karma}}</p>
           <div>
             <img id="avatar" src="{{ user.get_avatar }}" alt="ava">
           </div>
+          <p>Rating: {{ user.karma}}</p>
           <form method="post" action="{% url 'logout' %}">
               {% csrf_token %}
               <button id="logout" type="submit">Logout</button>
           </form>
-        </div>
         {% else %}
           <a id="login" href="{% url 'login' %}">Login</a>
         {% endif %}
@@ -44,10 +46,9 @@
       {% block content %}
       {% endblock %}
     </main>
-
-    <!-- Footer section with copyright notice -->
-    <footer>
-      <p>&copy; 2023 MySite. All rights reserved.</p>
-    </footer>
+      <footer class="footer">
+        <p>&copy; 2023 MySite. All rights reserved.</p>
+      </footer>
+    </div>
   </body>
 </html>

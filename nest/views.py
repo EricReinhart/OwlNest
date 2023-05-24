@@ -10,12 +10,17 @@ from django.contrib.auth import logout, login
 from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView, DeleteView
 from .forms import PostForm, CommentForm, SubscriptionForm, UserCreationForm, LoginForm
-from .models import User, Post, Comment, TagSubscription, Tag
+from .models import User, Post, Comment, TagSubscription, Tag, PostVote
 from django.contrib.auth.views import LogoutView
-
+from django.urls import reverse
+from django.views.decorators.http import require_POST
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.db import models
+from embed_video.backends import VideoBackend
+import re
 
 class BestPostsListView(ListView):
     model = Post
@@ -87,12 +92,80 @@ def register_request(request):
 class CreatePostView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Post
     form_class = PostForm
+    template_name = 'create_post.html'
     success_message = "Post created successfully."
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         self.request.user.add_karma(1)
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        form.save()
+        return response
+    
+    def get_success_url(self):
+        return reverse('post_detail', args=[self.object.pk])
+    
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
+    context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        context['comments'] = post.comments.all().order_by('-created_at')
+        context['comment_form'] = CommentForm()
+        context['vote_score'] = post.votes.aggregate(models.Sum('value'))['value__sum'] or 0
+        context['user_vote'] = None
+        if self.request.user.is_authenticated:
+            try:
+                context['user_vote'] = post.votes.get(user=self.request.user).value
+            except PostVote.DoesNotExist:
+                pass
+        return context
+
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        comment_form = CommentForm(request.POST, request.FILES)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            messages.success(request, 'Comment added successfully.')
+            return redirect('post_detail', pk=post.id)
+        else:
+            messages.error(request, 'Error adding comment.')
+            return self.get(request, *args, **kwargs)
+
+class CustomBackend(VideoBackend):
+    re_detect = re.compile(r'http://myvideo\.com/[0-9]+')
+    re_code = re.compile(r'http://myvideo\.com/(?P<code>[0-9]+)')
+
+    allow_https = False
+    pattern_url = '{protocol}://play.myvideo.com/c/{code}/'
+    pattern_thumbnail_url = '{protocol}://thumb.myvideo.com/c/{code}/'
+
+    template_name = 'embed_video/custombackend_embed_code.html'  # added in v0.9
+
+@login_required
+@require_POST
+def post_vote(request, id):
+    post = get_object_or_404(Post, id=id)
+    value = int(request.POST.get('value', 0))
+    if value not in [-1, 1]:
+        return HttpResponseBadRequest("Invalid vote value.")
+    vote, created = PostVote.objects.get_or_create(post=post, user=request.user, defaults={'value': value})
+    if not created:
+        if vote.value == value:
+            # User has already voted the same value
+            vote.delete()
+        else:
+            # User has changed their vote
+            vote.value = value
+            vote.save()
+    post.update_vote_score()
+    return redirect('post_detail', pk=post.pk)
 
 class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Post

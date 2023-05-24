@@ -3,13 +3,14 @@ from .models import Post, Comment, TagSubscription, User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.files.images import ImageFile
+from django.core.files.storage import FileSystemStorage
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags', 'image']
+        fields = ['title', 'content', 'tags', 'media', 'video']
         widgets = {
-            'tags': forms.CheckboxSelectMultiple
+            'tags': forms.CheckboxSelectMultiple(),
         }
 
 class CommentForm(forms.ModelForm):

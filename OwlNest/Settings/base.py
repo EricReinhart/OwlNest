@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'nest',
     'rest_framework',
     'rest_framework.authtoken',
+    'embed_video',
 ]
 
 

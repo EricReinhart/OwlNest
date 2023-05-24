@@ -11,3 +11,4 @@ local.py
 *.pyo
 .installed.cfg
 bin
+uploads/

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load embed_video_tags %}
+
+{% block css_files%} 
+    <link rel="stylesheet" href="{% static "post_detail.css" %}">
+    <link rel="stylesheet" href="{% static "base.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+  <div class="post-detail">
+    <h1>{{ post.title }}</h1>
+    <p>Author: {{ post.author.username }}</p>
+    <p>Created at: {{ post.created_at }}</p>
+    <p>Tags: {% for tag in post.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    <p>Rating: {{ vote_score }}</p>
+    {% if user.is_authenticated %}
+      <div class="vote-buttons">
+        <form method="post" action="{% url 'post_vote' id=post.id %}">
+          {% csrf_token %}
+          <button type="submit" name="value" value="1" {% if user_vote == 1 %}disabled{% endif %}>+</button>
+          <button type="submit" name="value" value="-1" {% if user_vote == -1 %}disabled{% endif %}>-</button>
+        </form>
+      </div>
+    {% endif %}
+    <div class="post-content">
+      <p>{{ post.content }}</p>
+      {% if post.media %}
+        <img src="{{ post.media.url }}" alt="Post media">
+      {% elif post.video %}
+        {% video post.video 'small' %}
+      {% endif %}
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="comments">
+    <h2>Comments</h2>
+    {% for comment in comments %}
+      <div class="comment">
+        <p>{{ comment.content }}</p>
+        <p>Author: {{ comment.author.username }}</p>
+        <p>Created at: {{ comment.created_at }}</p>
+        {% if comment.image %}
+          <img src="{{ comment.image.url }}" alt="Comment image">
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>No comments yet.</p>
+    {% endfor %}
+  </div>
+
+  <hr>
+
+  <div class="add-comment">
+    <h2>Add comment</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <button type="submit">Add comment</button>
+    </form>
+  </div>
+{% endblock %}

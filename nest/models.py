@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.urls import reverse
+from embed_video.fields import EmbedVideoField
 
 
 class CustomUserManager(BaseUserManager):
@@ -45,18 +47,39 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    image = models.ImageField(upload_to="uploads")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, blank=True)
     karma = models.IntegerField(default=0)
+    media = models.FileField(upload_to="uploads", blank=True)
+    video = EmbedVideoField(blank=True)
 
     def clean(self):
         has_content = bool(self.content)
-        has_image = bool(self.image)
-        if not has_content and not has_image:
-            raise ValidationError('Please add some content or an image.')
+        has_media = bool(self.media) or bool(self.video)
+        if not has_content and not has_media:
+            raise ValidationError('Please add some content or upload a media file or provide a media URL.')
+        
+        if not self.title:
+            raise ValidationError('Please provide a title for the post.')
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
+
+    @property
+    def total_votes(self):
+        return self.votes.aggregate(models.Sum('value'))['value__sum'] or 0
+
+    def user_vote(self, user):
+        try:
+            return self.votes.get(user=user).value
+        except PostVote.DoesNotExist:
+            return None
+
+    def update_vote_score(self):
+        self.karma = self.total_votes
+        self.save()
 
 
 class PostVote(models.Model):
