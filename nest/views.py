@@ -5,19 +5,18 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout, login
 from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView, DeleteView
+from django.views.generic.edit import DeleteView
 from .forms import PostForm, CommentForm, SubscriptionForm, UserCreationForm, LoginForm
 from .models import User, Post, Comment, TagSubscription, Tag, PostVote
 from django.contrib.auth.views import LogoutView
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
 from django.db import models
 from embed_video.backends import VideoBackend
 import re
@@ -138,6 +137,7 @@ class PostDetailView(DetailView):
             messages.error(request, 'Error adding comment.')
             return self.get(request, *args, **kwargs)
 
+#Youtube integration
 class CustomBackend(VideoBackend):
     re_detect = re.compile(r'http://myvideo\.com/[0-9]+')
     re_code = re.compile(r'http://myvideo\.com/(?P<code>[0-9]+)')
@@ -170,11 +170,18 @@ def post_vote(request, id):
 class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Post
     form_class = PostForm
+    template_name = "edit_post.html"
     success_message = "Your post has been updated successfully."
 
     def form_valid(self, form):
         form.instance.updated_at = timezone.now()
         return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        post = super().get_object(queryset=queryset)
+        if post.author != self.request.user:
+            raise Http404()
+        return post
 
 
 class CreateCommentView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
