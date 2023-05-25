@@ -8,4 +8,8 @@
         {{ form.as_p }}
         <button type="submit">Save changes</button>
     </form>
+    <form action="{% url 'delete_post' pk=post.pk %}" method="post";>
+        {% csrf_token %}
+            <button type="submit">Delete</button>
+    </form>
 {% endblock %}

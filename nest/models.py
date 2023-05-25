@@ -78,8 +78,12 @@ class Post(models.Model):
             return None
 
     def update_vote_score(self):
-        self.karma = self.total_votes
+        total_votes = self.total_votes
+        self.karma = total_votes
         self.save()
+
+        if total_votes > 0 and self.author != self.votes.last().user:
+            self.author.add_karma(1)
 
 
 class PostVote(models.Model):

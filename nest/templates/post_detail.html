@@ -33,6 +33,10 @@
     </div>
     {% if user.is_authenticated and user == post.author %}
       <a href="{% url 'edit_post' post.pk %}">Edit Post</a>
+      <form action="{% url 'delete_post' pk=post.pk %}" method="post";>
+        {% csrf_token %}
+            <button type="submit">Delete</button>
+      </form>
     {% endif %}
   </div>
 

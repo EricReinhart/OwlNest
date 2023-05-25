@@ -20,6 +20,7 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
 from django.db import models
 from embed_video.backends import VideoBackend
 import re
+from django.db.models import Sum
 
 class BestPostsListView(ListView):
     model = Post
@@ -96,7 +97,6 @@ class CreatePostView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        self.request.user.add_karma(1)
         response = super().form_valid(form)
         form.save()
         return response
@@ -218,10 +218,12 @@ class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('home')
     success_message = "Post deleted successfully."
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        request.user.add_karma(-self.object.karma)
-        return super().delete(request, *args, **kwargs)
+    def form_valid(self, form):
+        post = self.get_object()
+        author = post.author
+        post_karma = post.karma
+        author.add_karma(-post_karma)
+        return super().form_valid(form)
 
 
 class DeleteCommentView(LoginRequiredMixin, DeleteView):
