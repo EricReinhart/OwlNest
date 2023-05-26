@@ -29,33 +29,17 @@ class BestPostsListView(ListView):
     context_object_name = 'best_posts'
 
     def get_queryset(self):
-        period = self.kwargs.get('period', 'all')
-        if period == 'week':
-            return Post.objects.filter(created_at__gte=timezone.now()-timezone.timedelta(days=7)).order_by('-karma')[:10]
-        elif period == 'day':
-            return Post.objects.filter(created_at__gte=timezone.now()-timezone.timedelta(days=1)).order_by('-karma')[:10]
-        else:
-            return Post.objects.all().order_by('-karma', '-created_at')[:10]
+        if 'period' in self.request.GET:
+            period = self.request.GET['period']
+            if period == 'day':
+                return Post.objects.filter(created_at__gte=timezone.now()-timezone.timedelta(days=1)).order_by('-karma')
+            elif period == 'week':
+                return Post.objects.filter(created_at__gte=timezone.now()-timezone.timedelta(days=7)).order_by('-karma')
+        return Post.objects.all().order_by('-karma')[:10]
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['all_posts'] = Post.objects.all().order_by('-karma')
-        context['user'] = None
-        context['user_rating'] = None
-        context['period'] = self.kwargs.get('period', 'day')
-        if not context['best_posts'].count():
-            if self.kwargs.get('period', 'day') == 'week':
-                message = "Sorry, there were no posts in the last week!"
-            elif self.kwargs.get('period', 'day') == 'day':
-                message = "Sorry, there were no posts in the last day!"
-            else:
-                message = "Sorry, there are no posts yet!"
-            context['message'] = message
-        else:
-            context['message'] = ""
-        if self.request.user.is_authenticated:
-            context['user'] = self.request.user
-            context['user_rating'] = self.request.user.karma
+        context['period'] = self.request.GET.get('period', 'best')
         return context
 
 class CustomLoginView(LoginView):
