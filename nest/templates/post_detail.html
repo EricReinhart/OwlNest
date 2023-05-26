@@ -52,6 +52,13 @@
         {% if comment.image %}
           <img src="{{ comment.image.url }}" alt="Comment image">
         {% endif %}
+        {% if comment.author == request.user %}
+          <a href="{% url 'edit_comment' comment.pk %}">Edit</a>
+        {% endif %}
+        <form action="{% url 'delete_comment' pk=comment.pk %}" method="post">
+          {% csrf_token %}
+              <button type="submit">Delete</button>
+        </form>
       </div>
     {% empty %}
       <p>No comments yet.</p>

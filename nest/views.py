@@ -20,6 +20,7 @@ from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
 from django.db import models
 from embed_video.backends import VideoBackend
 import re
+from django.core.exceptions import PermissionDenied
 from django.db.models import Sum
 
 class BestPostsListView(ListView):
@@ -165,7 +166,8 @@ def post_vote(request, id):
             vote.value = value
             vote.save()
     post.update_vote_score()
-    return redirect('post_detail', pk=post.pk)
+    current_url = request.META.get('HTTP_REFERER')
+    return redirect(current_url)
 
 class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Post
@@ -202,7 +204,7 @@ class EditCommentView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     success_message = "Comment updated successfully."
-    template_name_suffix = '_update_form'
+    template_name = 'edit_comment.html'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -210,7 +212,17 @@ class EditCommentView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.updated_at = timezone.now()
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        return response
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.author != request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.post.pk})
 
 
 class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
@@ -231,16 +243,13 @@ class DeleteCommentView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('home')
     success_message = "Comment deleted successfully."
 
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         self.object = self.get_object()
-        request.user.add_karma(-self.object.karma)
-        post = get_object_or_404(Post, pk=kwargs['post_pk'])
-        post.add_karma(-self.object.karma)
-        messages.success(request, self.success_message)
-        return super().delete(request, *args, **kwargs)
+        messages.success(self.request, self.success_message)
+        return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['post_pk']})
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.post.pk})
 
 
 class FeedView(LoginRequiredMixin, ListView):

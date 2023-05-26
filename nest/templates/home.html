@@ -27,6 +27,15 @@
           {% elif post.video %}
             {% video post.video 'small' %}
           {% endif %}
+          {% if user.is_authenticated %}
+            <div class="vote-buttons">
+              <form method="post" action="{% url 'post_vote' id=post.id %}">
+                {% csrf_token %}
+                <button type="submit" name="value" value="1" {% if user_vote == 1 %}disabled{% endif %}>+</button>
+                <button type="submit" name="value" value="-1" {% if user_vote == -1 %}disabled{% endif %}>-</button>
+              </form>
+            </div>
+          {% endif %}
           <h3>{{ post.karma }}</h3>
           <h3>{{ post.title }}</h3>
         </a>
