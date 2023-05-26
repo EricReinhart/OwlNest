@@ -15,28 +15,48 @@
     <p>Birthday: {{ user_profile.birthday }}</p>
     <p>Karma: {{ user_profile.karma }}</p>
     {% if user == user_profile %}
-      <a href="{% url 'edit_profile' %}">Edit Profile</a>
+      <a href="{% url 'edit_profile' %}">EditProfile</a>
     {% endif %}
   </div>
+
+{% if user != user_profile %}
+  {% if user.is_authenticated %}
+      {% if subscribed_to %}
+          <form method="post" action="{% url 'subscribe' pk=user_profile.pk %}">
+              {% csrf_token %}
+              <input type="hidden" name="subscribed_to" value="user_profile" />
+              <button type="submit" name="unsubscribe">Unsubscribe</button>
+          </form>
+      {% else %}
+          <form method="post" action="{% url 'subscribe' pk=user_profile.pk %}">
+              {% csrf_token %}
+              <input type="hidden" name="subscribed_to" value="user_profile" />
+              <button type="submit" name="subscribe">Subscribe</button>
+          </form>
+      {% endif %}
+  {% else %}
+      <p>Please log in to subscribe.</p>
+  {% endif %}
+{% endif %}
 
   <hr>
 
   <div class="user-posts">
     <h2>Posts</h2>
     {% for post in posts %}
-        <div class="post-content">
-            <p>{{ post.content }}</p>
-            {% if post.media %}
-              <img src="{{ post.media.url }}" alt="Post media">
-            {% elif post.video %}
-              {% video post.video 'small' %}
-            {% endif %}
-         </div>
+      <div class="post-content">
+        <p>{{ post.content }}</p>
+        {% if post.media %}
+          <img src="{{ post.media.url }}" alt="Post media">
+        {% elif post.video %}
+          {% video post.video 'small' %}
+        {% endif %}
+      </div>
       {% if user.is_authenticated and user == post.author %}
         <a href="{% url 'edit_post' post.pk %}">Edit Post</a>
-        <form action="{% url 'delete_post' pk=post.pk %}" method="post";>
+        <form action="{% url 'delete_post' pk=post.pk%}" method="post">
           {% csrf_token %}
-              <button type="submit">Delete</button>
+          <button type="submit">Delete</button>
         </form>
       {% endif %}
     {% empty %}

@@ -9,10 +9,10 @@ from django.contrib.auth import logout, login
 from django.db.models import Q
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import DeleteView
-from .forms import PostForm,UserForm, CommentForm, SubscriptionForm, UserCreationForm, LoginForm
-from .models import User, Post, Comment, TagSubscription, Tag, PostVote
+from .forms import PostForm,UserForm, CommentForm, UserCreationForm, LoginForm
+from .models import User, Post, Comment, TagSubscription, Tag, PostVote, UserSubscription
 from django.contrib.auth.views import LogoutView
 from django.urls import reverse
 from django.views.decorators.http import require_POST
@@ -21,7 +21,7 @@ from django.db import models
 from embed_video.backends import VideoBackend
 import re
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.forms import PasswordChangeForm, UserChangeForm
+from django.contrib.auth.forms import UserChangeForm
 
 class BestPostsListView(ListView):
     model = Post
@@ -138,21 +138,34 @@ class PostDetailView(DetailView):
             messages.error(request, 'Error adding comment.')
             return self.get(request, *args, **kwargs)
 
-class UserProfilePage(LoginRequiredMixin, DetailView):
-    model = User
-    template_name = 'user_profile.html'
-    context_object_name = 'user_profile'
+class UserProfilePage(DetailView):
+   model = User
+   template_name = 'user_profile.html'
+   context_object_name = 'user_profile'
+   def get_context_data(self, **kwargs):
+       context = super().get_context_data(**kwargs)
+       if self.request.user == self.get_object():
+           context['edit_profile_form'] = UserChangeForm(instance=self.request.user)
+       context['posts'] = Post.objects.filter(author=self.object)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.user == self.get_object():
-            context['edit_profile_form'] = UserChangeForm(instance=self.request.user)
-            context['change_password_form'] = PasswordChangeForm(user=self.request.user)
+       if self.request.user.is_authenticated:
+           subscribed_to = UserSubscription.objects.filter(subscriber=self.request.user, subscribed_to=self.object).exists()
+           context['subscribed_to'] = subscribed_to
+       return context        
 
-        # Фильтрация постов по автору
-        context['posts'] = Post.objects.filter(author=self.object)
 
-        return context
+class UserSubscriptionView(View):
+    def post(self, request, *args, **kwargs):
+        subscribed_to_user = get_object_or_404(User, pk=self.kwargs['pk'])
+        subscriber_user = self.request.user
+        subscribed_to = request.POST.get('subscribed_to')
+
+        if 'subscribe' in request.POST:
+            UserSubscription.objects.create(subscriber=subscriber_user, subscribed_to=subscribed_to_user)
+        elif 'unsubscribe' in request.POST:
+            UserSubscription.objects.filter(subscriber=subscriber_user, subscribed_to=subscribed_to_user).delete()
+
+        return redirect(reverse('user_profile', kwargs={'pk': subscribed_to_user.pk}))
 
 
 @login_required
@@ -291,43 +304,47 @@ class FeedView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         subscriptions = TagSubscription.objects.filter(user=self.request.user)
         subscribed_tags = set([subscription.tag for subscription in subscriptions])
-        return Post.objects.filter(tags__in=subscribed_tags).order_by('-created_at')
+        subscribed_users = set([subscription.subscribed_to for subscription in self.request.user.subscriptions.all()])
+
+        return Post.objects.filter(Q(tags__in=subscribed_tags) | Q(author__in=subscribed_users)).order_by('-created_at')
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tag_name = self.kwargs.get('tag_name')
+        if tag_name:
+            queryset = queryset.filter(tags__name=tag_name)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['subscriptions'] = TagSubscription.objects.filter(user=self.request.user)
+        tag_name = self.kwargs.get('tag_name')
+        if tag_name:
+            tag = Tag.objects.get(name=tag_name)
+            context['tag_name'] = tag_name
+            context['subscribers_count'] = tag.tagsubscription_set.count()
+            if self.request.user.is_authenticated:
+                context['is_subscribed'] = TagSubscription.objects.filter(user=self.request.user, tag=tag).exists()
         return context
 
 
-@login_required
-def create_subscription(request):
-    if request.method == 'POST':
-        form = SubscriptionForm(request.POST)
-        if form.is_valid():
-            subscription = form.save(commit=False)
-            subscription.user = request.user
-            subscription.save()
-            messages.success(request, 'You have subscribed successfully.')
-            return redirect('subscriptions')
-    else:
-        form = SubscriptionForm()
-    return render(request, 'create_subscription.html', {'form': form})
+class TagSubscriptionView(LoginRequiredMixin, ListView):
+    model = TagSubscription
+    template_name = 'tag_subscription.html'
+    context_object_name = 'subscriptions'
 
-
-@login_required
-def delete_subscription(request, pk):
-    subscription = get_object_or_404(TagSubscription, pk=pk, user=request.user)
-    if request.method == 'POST':
-        subscription.delete()
-        messages.success(request, 'You have unsubscribed successfully.')
-        return redirect('subscriptions')
-    return render(request, 'delete_subscription.html', {'subscription': subscription})
-
-
-@login_required
-def subscriptions(request):
-    subscriptions = TagSubscription.objects.filter(user=request.user)
-    return render(request, 'subscriptions.html', {'subscriptions': subscriptions})
+    def post(self, request, *args, **kwargs):
+        tag_name = request.POST.get('tag_name')
+        if tag_name:
+            tag = Tag.objects.get(name=tag_name)
+            subscription = TagSubscription.objects.create(user=request.user, tag=tag)
+        return redirect('post_list', tag_name=tag_name)
 
 
 class SearchPostsView(ListView):

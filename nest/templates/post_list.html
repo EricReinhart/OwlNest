@@ -8,7 +8,20 @@
 {% endblock css_files %}
 
 {% block content %}
-  <h1>Feed</h1>
+  {% if tag_name %}
+    <h1>Posts with tag "{{ tag_name }}"</h1>
+    {% if request.user.is_authenticated %}
+      {% if is_subscribed %}
+        <p>You are subscribed to this tag.</p>
+      {% else %}
+        <form method="post" action="{% url 'tag_subscription' %}">
+          <input type="hidden" name="tag_name" value="{{ tag_name }}">
+          {% csrf_token %}
+          <button type="submit">Subscribe to this tag</button>
+        </form>
+      {% endif %}
+    {% endif %}
+  {% endif %}
   
   {% for post in posts %}
     <div class="post">
@@ -20,7 +33,7 @@
         {% video post.video 'small' %}
       {% endif %}
     </div>
-      <p>Tags: {% for tag in post.tags.all %}<a href="{% url 'post_list' tag_name=tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      <p>Tags: {% for tag in post.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
     </div>
   {% endfor %}
 {% endblock %}

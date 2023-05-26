@@ -36,6 +36,10 @@ class User(AbstractUser):
             return self.avatar.url
         else:
             return '/static/images/default_avatar.jpg'
+        
+class UserSubscription(models.Model):
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions')
+    subscribed_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscribers')
 
 
 class Tag(models.Model):
@@ -54,6 +58,7 @@ class Post(models.Model):
     karma = models.IntegerField(default=0)
     media = models.FileField(upload_to="uploads", blank=True)
     video = EmbedVideoField(blank=True)
+    users = models.ManyToManyField(User, related_name='posts')
 
     def clean(self):
         has_content = bool(self.content)
