@@ -13,6 +13,12 @@ class PostForm(forms.ModelForm):
             'tags': forms.CheckboxSelectMultiple(),
         }
 
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email',]
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment

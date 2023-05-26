@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load embed_video_tags %}
+
+{% block css_files%} 
+    <link rel="stylesheet" href="{% static "user_profile.css" %}">
+    <link rel="stylesheet" href="{% static "base.css" %}">
+{% endblock css_files %}
+
+{% block content %}
+  <div class="user-profile">
+    <h1>{{ user_profile.username }}</h1>
+    <img src="{{ user_profile.get_avatar }}" alt="Avatar">
+    <p>Email: {{ user_profile.email }}</p>
+    <p>Birthday: {{ user_profile.birthday }}</p>
+    <p>Karma: {{ user_profile.karma }}</p>
+    {% if user == user_profile %}
+      <a href="{% url 'edit_profile' %}">Edit Profile</a>
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <div class="user-posts">
+    <h2>Posts</h2>
+    {% for post in posts %}
+        <div class="post-content">
+            <p>{{ post.content }}</p>
+            {% if post.media %}
+              <img src="{{ post.media.url }}" alt="Post media">
+            {% elif post.video %}
+              {% video post.video 'small' %}
+            {% endif %}
+         </div>
+      {% if user.is_authenticated and user == post.author %}
+        <a href="{% url 'edit_post' post.pk %}">Edit Post</a>
+        <form action="{% url 'delete_post' pk=post.pk %}" method="post";>
+          {% csrf_token %}
+              <button type="submit">Delete</button>
+        </form>
+      {% endif %}
+    {% empty %}
+      <p>No posts yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

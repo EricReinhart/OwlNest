@@ -11,17 +11,17 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import DeleteView
-from .forms import PostForm, CommentForm, SubscriptionForm, UserCreationForm, LoginForm
+from .forms import PostForm,UserForm, CommentForm, SubscriptionForm, UserCreationForm, LoginForm
 from .models import User, Post, Comment, TagSubscription, Tag, PostVote
 from django.contrib.auth.views import LogoutView
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404
+from django.http import HttpResponseBadRequest, Http404
 from django.db import models
 from embed_video.backends import VideoBackend
 import re
 from django.core.exceptions import PermissionDenied
-from django.db.models import Sum
+from django.contrib.auth.forms import PasswordChangeForm, UserChangeForm
 
 class BestPostsListView(ListView):
     model = Post
@@ -137,6 +137,37 @@ class PostDetailView(DetailView):
         else:
             messages.error(request, 'Error adding comment.')
             return self.get(request, *args, **kwargs)
+
+class UserProfilePage(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'user_profile.html'
+    context_object_name = 'user_profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user == self.get_object():
+            context['edit_profile_form'] = UserChangeForm(instance=self.request.user)
+            context['change_password_form'] = PasswordChangeForm(user=self.request.user)
+
+        # Фильтрация постов по автору
+        context['posts'] = Post.objects.filter(author=self.object)
+
+        return context
+
+
+@login_required
+def edit_profile(request):
+    user = request.user
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'Your profile was successfully updated!')
+            return redirect('user_profile', pk=user.pk)
+    else:
+        user_form = UserForm(instance=user)
+    return render(request, 'edit_profile.html', {'user_form': user_form})
+
 
 #Youtube integration
 class CustomBackend(VideoBackend):
