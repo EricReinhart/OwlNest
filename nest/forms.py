@@ -2,8 +2,7 @@ from django import forms
 from .models import Post, Comment, TagSubscription, User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.files.images import ImageFile
-from django.core.files.storage import FileSystemStorage
+
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -61,6 +60,8 @@ class UserCreationForm(UserCreationForm):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         user.username = self.cleaned_data['username']
+        if 'avatar' in self.files:
+            user.avatar = self.files['avatar']
         if commit:
             user.save()
         return user
