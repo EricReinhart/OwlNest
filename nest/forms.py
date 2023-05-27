@@ -60,8 +60,9 @@ class UserCreationForm(UserCreationForm):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         user.username = self.cleaned_data['username']
-        if 'avatar' in self.files:
-            user.avatar = self.files['avatar']
+        user.karma = self.cleaned_data['karma']
+        if 'avatar' in self.cleaned_data:
+            user.avatar = self.cleaned_data['avatar']
         if commit:
             user.save()
         return user

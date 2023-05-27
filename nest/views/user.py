@@ -35,7 +35,7 @@ class CustomLogoutView(LogoutView):
 
 def register_request(request):
 	if request.method == "POST":
-		form = UserCreationForm(request.POST)
+		form = UserCreationForm(request.POST, request.FILES)
 		if form.is_valid():
 			user = form.save()
 			login(request, user)
