@@ -12,7 +12,6 @@ html {
 .header {
   margin: 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   height: 50px;
   padding: 10px;
@@ -35,31 +34,36 @@ html {
 #logo {
   width: 50px;
   height: 50px;
-  margin-right: 40px;
 }
 
-#avatar {
+#avatar-base {
   width: 50px;
   height: 50px;
   border-radius: 100px;
+  margin-left: 10px;
 }
 
 #feed {
   text-decoration: none;
   font-size: 30px;
   color: #967b9c;
+  margin-left: 5rem;
+  margin-right: 5rem;
 }
 
-#username {
+#username-base {
   text-decoration: none;
   font-size: 30px;
   color: #967b9c;
+  margin-left: 10rem;
 }
 
 #rating{
   text-decoration: none;
   font-size: 30px;
   color: #967b9c;
+  margin-left: 10rem;
+  margin-right: 5rem;
 }
 
 .search-box {
@@ -71,7 +75,8 @@ html {
   padding: 6px 12px;
   margin: 0 10px;
   max-width: 500px;
-
+  margin-left: 5rem;
+  margin-right: 5rem;
 }
 
 .search-box form {
@@ -124,6 +129,7 @@ html {
   align-items: center;
   font-family: 'Cormorant Garamond', serif;
   margin-right: 40px;
+  margin-left: 70rem;
 }
 
 #logout{
@@ -140,6 +146,7 @@ html {
   font-family: 'Cormorant Garamond', serif;
   margin-right: 40px;
   margin-top: 15px;
+  float: right;
 }
 
 #CreatePost {
@@ -169,5 +176,5 @@ html, body {
   background-color: rgb(194, 194, 194);
   height: 50px;
   padding-top: 0px;
-  
+  margin-top: auto;
 }

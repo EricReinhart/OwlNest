@@ -22,12 +22,12 @@
     {% for post in best_posts %}
       <div class="post">
         <a href="{% url 'post_detail' post.pk %}">
-          <h3>{{ post.title }}</h3>
-          <h3>{{ post.created_at }}</h3>
-          <a href="{% url 'user_profile' pk=post.author.pk %}">{{ post.author.username }}</a>
+            <h3 id="title">{{ post.title }}</h3>
+            <h3 id="created_at">{{ post.created_at }}</h3>
           <div>
+            <a id="username" href="{% url 'user_profile' pk=post.author.pk %}">{{ post.author.username }}</a>
             <img id="avatar" src="{{ post.author.get_avatar }}" alt="ava">
-         </div>
+          </div>
           {% if user.is_authenticated %}
             <div class="vote-buttons">
               <form method="post" action="{% url 'post_vote' id=post.id %}">

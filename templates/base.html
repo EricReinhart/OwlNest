@@ -27,9 +27,9 @@
             <button id="CreatePost" type="submit">Create Post</button>
           </form>
           <a id="Feed" href="{% url 'feed' %}">Feed</a>
-          <a id="username" href="{% url 'user_profile' pk=user.pk %}">{{ user.username }}</a>
+          <a id="username-base" href="{% url 'user_profile' pk=user.pk %}">{{ user.username }}</a>
           <div>
-            <img id="avatar" src="{{ user.get_avatar }}" alt="ava">
+            <img id="avatar-base" src="{{ user.get_avatar }}" alt="ava">
           </div>
           <p id="rating">Rating: {{ user.karma}}</p>
           <form method="post" action="{% url 'logout' %}">
