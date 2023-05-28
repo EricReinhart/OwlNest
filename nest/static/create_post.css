@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
+
+html {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.form-wrapper-create-post {
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #888;
+  width: 700px;
+  margin: 0 auto;
+}
+
+.form-wrapper-create-post h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-wrapper-create-post form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-wrapper-create-post label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-wrapper-create-post input[type="text"],
+.form-wrapper-create-post textarea {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px #888;
+  resize: vertical;
+}
+
+.form-wrapper-create-post input[type="file"] {
+  margin-bottom: 15px;
+}
+
+.form-wrapper-create-post button[type="submit"] {
+  background-color:rgb(216, 216, 216);
+  color: #967b9c;;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.form-wrapper-create-post button[type="submit"]:hover {
+  background-color: rgb(146, 146, 146);
+}

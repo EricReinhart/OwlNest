@@ -12,10 +12,10 @@
 
 {% block content %}
   <!-- Buttons to switch between day, week, and all posts -->
-  <div>
-    <button{% if period == 'all' %} class="selected"{% endif %}><a href="{% url 'home' %}?period=all">All Posts</a></button>
-    <button{% if period == 'day' %} class="selected"{% endif %}><a href="{% url 'home' %}?period=day">Day</a></button>
-    <button{% if period == 'week' %} class="selected"{% endif %}><a href="{% url 'home' %}?period=week">Week</a></button>
+  <div id="buttons_period">
+    <button id="button_all" {% if period == 'all' %} class="selected"{% endif %}><a id="button_all_link" href="{% url 'home' %}?period=all">All Posts</a></button>
+    <button id="button_day" {% if period == 'day' %} class="selected"{% endif %}><a id="button_day_link" href="{% url 'home' %}?period=day">Day</a></button>
+    <button id="button_week" {% if period == 'week' %} class="selected"{% endif %}><a id="button_week_link" href="{% url 'home' %}?period=week">Week</a></button>
   </div>
 
   <div class="post-grid">

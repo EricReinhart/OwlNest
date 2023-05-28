@@ -7,10 +7,12 @@
 {% endblock css_files %}
 
 {% block content %}
+<div class="form-wrapper-create-post">
   <h2>Create a Post</h2>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Create Post</button>
   </form>
+</div>
 {% endblock %}

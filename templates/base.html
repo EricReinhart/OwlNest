@@ -12,33 +12,32 @@
   <body>
     <!-- Header section with logo, search bar, login or username, feed button -->
     <header class="header">
-      <h1 id='name'>OwlNest</h1>
+      <a id='name-link' href=" {% url "home" %}"> <h1 id='name'>OwlNest</h1> </a>
       <div>
         <a href="{% url "home" %}"><img id="logo" src="{% static "images/logo.png" %}" alt="logo"></a>
       </div>
       <div class="search-box">
         <form method="GET" action="{% url 'search_posts' %}">
           <input type="text" name="q" placeholder="Search">
-          <button type="submit">Search</button>
-      </div>
+        </form>
       </div>
       </form class="user-box">
         {% if user.is_authenticated %}
           <form action="{% url 'create_post' %}">
             <button id="CreatePost" type="submit">Create Post</button>
           </form>
-          <a href="{% url 'feed' %}">Feed</a>
-          <p><a href="{% url 'user_profile' pk=user.pk %}">{{ user.username }}</a></p>
+          <a id="Feed" href="{% url 'feed' %}">Feed</a>
+          <a id="username" href="{% url 'user_profile' pk=user.pk %}">{{ user.username }}</a>
           <div>
             <img id="avatar" src="{{ user.get_avatar }}" alt="ava">
           </div>
-          <p>Rating: {{ user.karma}}</p>
+          <p id="rating">Rating: {{ user.karma}}</p>
           <form method="post" action="{% url 'logout' %}">
               {% csrf_token %}
               <button id="logout" type="submit">Logout</button>
           </form>
         {% else %}
-          <a id="login" href="{% url 'login' %}">Login</a>
+          <button id="login" type="button" class="button" onclick="window.location.href='{% url 'login' %}';">Login</button>
         {% endif %}
     </header>
 

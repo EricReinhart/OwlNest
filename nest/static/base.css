@@ -2,6 +2,7 @@
 html {
     font-family: 'Cormorant Garamond', serif;
     height: 100%;
+    background-color: #fff5f5;
   }
 
 .body{
@@ -15,48 +16,84 @@ html {
   align-items: center;
   height: 50px;
   padding: 10px;
-  background-color: rgb(194, 194, 194);
+  background-color: rgb(233, 231, 231);
+  text-decoration: none;
 }
 
 #name {
   font-family: 'Cormorant Garamond', serif;
   color: #967b9c;
-  font-weight: 1500;
+  padding-left: 30px;
+  margin-top: 20px;
+  font-size: 2.5rem;
 }
+
+#name-link {
+  text-decoration: none;
+}
+
 #logo {
   width: 50px;
   height: 50px;
+  margin-right: 40px;
 }
 
 #avatar {
   width: 50px;
   height: 50px;
+  border-radius: 100px;
+}
+
+#feed {
+  text-decoration: none;
+  font-size: 30px;
+  color: #967b9c;
+}
+
+#username {
+  text-decoration: none;
+  font-size: 30px;
+  color: #967b9c;
+}
+
+#rating{
+  text-decoration: none;
+  font-size: 30px;
+  color: #967b9c;
 }
 
 .search-box {
-  display: flex;  
+  display: flex;
   align-items: center;
-  background-color: rgb(122, 122, 122);
-  border: 2px solid rgb(192, 158, 158);
-  border-radius: 5px;
-  padding: 5px;
+  background-color: #f5f8fa;
+  border: 1px solid #d1d2d3;
+  border-radius: 9999px;
+  padding: 6px 12px;
   margin: 0 10px;
+  max-width: 500px;
+
+}
+
+.search-box form {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .search-box input[type="text"] {
+  flex: 1;
   border: none;
   outline: none;
-  width: 300px;
-  padding: 5px;
+  background-color: transparent;
+  margin-right: 12px;
+  text-align: left;
+  padding-left: 10px;
+  padding-top: 10px;
 }
-
-.search-box button {
-  border: none;
-  background-color: #967b9c;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
+.search-box input[type="text"]::placeholder {
+  text-align: left;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 25px;
 }
 
 .user-box {
@@ -74,44 +111,50 @@ html {
 .user-box .username {
   margin-right: 10px;
 }
-
 #login {
-  border: 8px solid rgb(122, 122, 122);
-  background-color: white; 
+  border: 2px solid #d1d2d3;
+  background-color: #f5f8fa; 
   color: #967b9c;
   border-radius: 40px;
   font-size: 25px;
   font-weight: 700;
   text-decoration: none;
-  width: 100px;
+  width: 120px;
+  height: 50px;
   align-items: center;
   font-family: 'Cormorant Garamond', serif;
+  margin-right: 40px;
 }
 
 #logout{
-  border: 8px solid rgb(122, 122, 122);
-  background-color: white; 
+  border: 2px solid #d1d2d3;
+  background-color: #f5f8fa; 
   color: #967b9c;
   border-radius: 40px;
   font-size: 25px;
   font-weight: 700;
   text-decoration: none;
-  width: 100px;
+  width: 120px;
+  height: 50px;
   align-items: center;
   font-family: 'Cormorant Garamond', serif;
+  margin-right: 40px;
+  margin-top: 15px;
 }
 
 #CreatePost {
-  border: 8px solid rgb(122, 122, 122);
-  background-color: white; 
+  border: 2px solid #d1d2d3;
+  background-color: #f5f8fa; 
   color: #967b9c;
   border-radius: 40px;
   font-size: 25px;
   font-weight: 700;
   text-decoration: none;
   width: 200px;
+  height: 50px;
   align-items: center;
   font-family: 'Cormorant Garamond', serif;
+  margin-top: 15px;
 }
 
 html, body {
@@ -126,4 +169,5 @@ html, body {
   background-color: rgb(194, 194, 194);
   height: 50px;
   padding-top: 0px;
+  
 }

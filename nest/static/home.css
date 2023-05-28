@@ -2,3 +2,116 @@
 html {
     font-family: 'Cormorant Garamond', serif;
   }
+
+ #buttons_period{
+  text-align: center;
+ } 
+
+#button_all {
+  border: 2px solid #d1d2d3;
+  background-color: #f5f8fa; 
+  border-radius: 40px;
+  font-size: 25px;
+  font-weight: 700;
+  text-decoration: none;
+  width: 120px;
+  height: 50px;
+  align-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  margin-right: 40px;
+  margin-top: 15px;
+}
+
+#button_all_link {
+  text-decoration: none;
+  color: #967b9c;
+}
+
+#button_day {
+  border: 2px solid #d1d2d3;
+  background-color: #f5f8fa; 
+  border-radius: 40px;
+  font-size: 25px;
+  font-weight: 700;
+  text-decoration: none;
+  width: 120px;
+  height: 50px;
+  align-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  margin-right: 40px;
+  margin-top: 15px;
+}
+
+#button_day_link {
+  text-decoration: none;
+  color: #967b9c;
+}
+
+#button_week {
+  border: 2px solid #d1d2d3;
+  background-color: #f5f8fa; 
+  border-radius: 40px;
+  font-size: 25px;
+  font-weight: 700;
+  text-decoration: none;
+  width: 120px;
+  height: 50px;
+  align-items: center;
+  font-family: 'Cormorant Garamond', serif;
+  margin-right: 40px;
+  margin-top: 15px;
+}
+
+#button_week_link {
+  text-decoration: none;
+  color: #967b9c;
+}
+
+  .post-grid {
+    display: grid;
+    grid-gap: 20px;
+    justify-items: left;
+    margin-left: 10rem;
+  }
+  
+  .post {
+    background-color: #f2f2f2;
+    box-shadow: 0px 0px 10px #888;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: left;
+    max-width: 600px;
+    margin: 20px;
+    padding-left: 3rem;
+    position: relative;
+    min-width: 60rem;
+    min-height: 40rem;
+  }
+
+
+  .post img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .vote-buttons {
+    position: absolute;
+    padding-left: 2rem;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 2px;
+  }
+  
+  .vote-buttons button {
+    background-color: transparent;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
