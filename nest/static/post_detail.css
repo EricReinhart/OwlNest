@@ -37,3 +37,89 @@ html {
     display: flex;
     padding-left: 20px;
 }
+
+.comment{
+    background-color: #f2f2f2;
+    box-shadow: 0px 0px 10px #888;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: left;
+    max-width: 600px;
+    margin: 20px;
+    padding-left: 3rem;
+    min-width: 60rem;
+    min-height: 20rem;
+    }
+    
+    .comment img {
+    max-width: 40rem;
+    max-height: 30rem;
+    height: auto;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    }
+    
+    .comment {
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 10px;
+    }
+    
+    .comment-header {
+    display: flex;
+    align-items: center;
+    }
+    
+    #avatar-comment{
+    width: 30px;
+    height: 30px;
+    border-radius: 100px;
+    margin-right: 20px;
+    margin-bottom: 30px;
+    }
+    
+    #username-comment, #date-comment{
+    display: inline-block;
+    vertical-align: middle;
+    }
+    
+    #username-comment {
+    margin-right: 20px;
+    }
+    
+    #edit_comment, #delete_comment {
+    border: 2px solid #d1d2d3;
+    background-color: #f5f8fa;
+    color: #967b9c;
+    border-radius: 40px;
+    font-size: 25px;
+    font-weight: 700;
+    text-decoration: none;
+    width: 120px;
+    height: 50px;
+    font-family: 'Cormorant Garamond', serif;
+    margin-right: 10px;
+    display: inline-block;
+    margin-top: 20px;
+    }
+
+    #comment-text{
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 25px;
+    }
+
+
+    #date-comment{
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 20px;
+        margin-left: 40rem;
+    }
+
+    #username-comment{
+        text-decoration: none;
+        color: #967b9c;
+        font-size: 30px;
+    }
+
+    #add-comment{
+        padding-left: 2rem;
+    }

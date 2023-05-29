@@ -24,40 +24,45 @@
 
   <hr>
 
-  <div class="comments">
+
     <h2 id="commsect">Comments</h2>
     {% for comment in comments %}
-      <div class="comment">
-        <p>{{ comment.content }}</p>
-        <p>Author: {{ comment.author.username }}</p>
-        <p>Created at: {{ comment.created_at }}</p>
+    <div class="comment">
+        <div class="comment-header">
+          <img id="avatar-comment" src="{{ comment.author.get_avatar }}" alt="ava">
+          <a id="username-comment" href="{% url 'user_profile' pk=post.author.pk %}">{{ comment.author.username }}</a>
+          <p id="date-comment">Created at: {{ comment.created_at }}</p>
+        </div>
         {% if comment.image %}
-          <img src="{{ comment.image.url }}" alt="Comment image">
+        <img src="{{ comment.image.url }}" alt="Comment image">
         {% endif %}
+        <p id="comment-text">{{ comment.content }}</p>
         {% if comment.author == request.user %}
+        <div style="display: flex; justify-content: space-between;">
           <button id="edit_comment" type="button" class="button" onclick="window.location.href='{% url 'edit_comment' comment.pk %}';">Edit</button>
           <form action="{% url 'delete_comment' pk=comment.pk %}" method="post">
             {% csrf_token %}
-                <button type="submit">Delete</button>
+                  <button id="delete_comment" type="submit">Delete</button>
           </form>
+        </div>
         {% endif %}
       </div>
-    {% empty %}
-      <p id="no_comments">No comments yet.</p>
-    {% endfor %}
-  </div>
+      {% empty %}
+        <p id="no_comments">No comments yet.</p>
+      {% endfor %}
+    </div>
 
   <hr>
-  {% if user.is_authenticated %}
-    <div class="add-comment">
+  <div id="add-comment">
+    {% if user.is_authenticated %}
       <h2>Add comment</h2>
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ comment_form.as_p }}
         <button type="submit">Add comment</button>
       </form>
-    </div>
   {% else %}
       <p>Please log in to comment</p>
   {% endif %}
+  </div>
 {% endblock %}

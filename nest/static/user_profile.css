@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
+html {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+ #Posts-title-Posts{
+  padding-left: 12rem;
+  font-size: 40px;
+  font-family: 'Cormorant Garamond', serif;
+  color: #967b9c;
+ }
+ #username-profile{
+  font-size: 30px;
+  color: #967b9c;
+  padding-left: 3rem;
+ }
+ #username-avatar-profile{
+  max-width: 20rem;
+  max-height: 20rem;
+  padding-left: 3rem;
+ }
+
+ #user-info-profile {
+  float: right;
+  margin-right: 80rem;
+  margin-top: 1rem;
+ }
+
+ #Email-user, #birthday-user, #user-karma-profile{
+  font-size: 20px;
+  font-family: 'Cormorant Garamond', serif;
+  color: #967b9c;
+  font-weight: bold;
+}
+#edit_profile_user{
+    border: 2px solid #d1d2d3;
+    background-color: #f5f8fa;
+    color: #967b9c;
+    border-radius: 40px;
+    font-size: 25px;
+    font-weight: 700;
+    text-decoration: none;
+    width: 120px;
+    height: 50px;
+    font-family: 'Cormorant Garamond', serif;
+    margin-right: 10px;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 3rem;
+}
+
+#user-unsubscribe-profile, #user-subscribe-profile{
+    border: 2px solid #d1d2d3;
+    background-color: #f5f8fa;
+    color: #967b9c;
+    border-radius: 40px;
+    font-size: 25px;
+    font-weight: 700;
+    text-decoration: none;
+    width: 150px;
+    height: 50px;
+    font-family: 'Cormorant Garamond', serif;
+    margin-right: 10px;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 3rem;
+}
