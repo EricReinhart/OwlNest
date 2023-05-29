@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
+html {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+ #post_elements{
+  text-decoration: none;
+ }
+
+#title {
+  font-size: 30px;
+  color: #967b9c;
+  margin-left: 2rem;
+  padding-top: 30px;
+}
+
+#created_at {
+  font-size: 30px;
+  color: #acacac;
+  position: absolute;
+  right: 10px;
+  top: -20px;
+}
+
+#username {
+  display: block;
+  position: absolute;
+  float: left;
+  text-decoration: none;
+  color: #acacac;
+  font-size: 30px;
+  margin-top: 15px;
+  padding-left: 20px;
+  top: -5px;
+  margin-left: 5rem;
+}
+
+#avatar {
+  display: block;
+  position: absolute;
+  margin-left: 3.5rem;
+  float: left;
+  top: 1px;
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+}
+
+#content{
+  font-size: 20px;
+  padding-top: 10px;
+}
+  .post-grid {
+    display: grid;
+    grid-gap: 20px;
+    justify-items: left;
+    margin-left: 10rem;
+  }
+  
+  .post {
+    background-color: #f2f2f2;
+    box-shadow: 0px 0px 10px #888;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: left;
+    max-width: 600px;
+    margin: 20px;
+    padding-left: 3rem;
+    position: relative;
+    min-width: 60rem;
+    min-height: 20rem;
+  }
+
+
+  .post img {
+    max-width: 100%;
+    max-height: 30rem;
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .vote-buttons {
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: 2px;
+    color: #727272;
+    font-size: 2rem;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+  } 
+
+  #butminus{
+    padding-left: 7px;
+    padding-top: 2px;
+  }
+  .vote-buttons button {
+    background-color: transparent;
+     border: none;
+     cursor: pointer;
+     color: #727272;
+     font-size: 2rem;
+   }
+
+   #karma{
+    margin-top: -10px;
+    margin-bottom: -10px;
+    padding-left: 5px;
+   }
+
+   #tag{
+    font-family: 'Cormorant Garamond', serif;
+   }
+
+   #tag_link{
+    text-decoration: none;
+    color: #727272;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 2px solid #d1d2d3;
+    background-color: #f5f8fa; 
+    border-radius: 50px;
+    margin-left: 10px;
+    padding: 10px 20px;
+   }
+   
+   .post video{
+    padding-top: 10px;
+   }
+
+   #comments_post {
+    display: inline-block;
+    position: absolute;
+    text-decoration: none;
+    margin-left: 48rem;
+    bottom: 30px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #727272;
+    text-align: right;
+}
+   #comments_post:hover{
+      color:#967b9c
+   }
+
