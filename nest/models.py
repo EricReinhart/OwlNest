@@ -74,7 +74,8 @@ class Post(models.Model):
 
     @property
     def total_votes(self):
-        return self.votes.aggregate(models.Sum('value'))['value__sum'] or 0
+        last_votes = self.votes.order_by('user', '-id').distinct('user').values_list('value', flat=True)
+        return sum(last_votes)
 
     def user_vote(self, user):
         try:
@@ -86,9 +87,11 @@ class Post(models.Model):
         total_votes = self.total_votes
         self.karma = total_votes
         self.save()
-
-        if total_votes > 0 and self.author != self.votes.last().user:
-            self.author.add_karma(1)
+    
+        if total_votes > 0:
+            last_votes = self.votes.order_by('user', '-id').distinct('user')
+            if last_votes.count() > 1 and self.author != last_votes[1].user:
+                self.author.add_karma(1)
 
 
 class PostVote(models.Model):

@@ -5,3 +5,4 @@ django-rest-auth
 split-settings
 Pillow
 django-embed-video
+gunicorn
