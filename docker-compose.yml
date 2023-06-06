@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13.2
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    ports:
+      - "5433:5432"
+
+  web:
+    build: .
+    command: sh /code/release.sh
+    volumes:
+      - .:/code
+      - static_volume:/code/static
+      - media_volume:/code/uploads
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  static_volume:
+  media_volume:

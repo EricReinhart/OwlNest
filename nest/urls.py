@@ -37,4 +37,4 @@ path('post_vote/<int:id>/', subscription.post_vote, name='post_vote'),
 path('tag/<str:tag_name>/', subscription.PostListView.as_view(), name='post_list'),
 path('tag_subscription/', subscription.TagSubscriptionView.as_view(), name='tag_subscription'),
 path('<int:pk>/subscribe/', subscription.UserSubscriptionView.as_view(), name='subscribe'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
