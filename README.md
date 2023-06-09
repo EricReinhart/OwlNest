@@ -1,6 +1,6 @@
 # OwlNest
 
-на русском ниже!!
+# на русском ниже!!
 
 
 Hello! This is my small Reddit-like project where I implemented the following features:
@@ -39,9 +39,9 @@ I understand that this is a production problem on a local machine, and all this 
 
 That's it in a nutshell. You can learn more by checking out the repository.
 
-I wanted to create an API, but I decided to make a separate project to showcase it.
+I wanted to create an API and Nginx, but I decided to make a separate project to showcase it.
 
-Have a nice day!
+# Have a nice day!
 
 ![screen](https://github.com/EricReinhart/OwlNest/assets/109595175/0329ff48-62f0-4680-827e-b1367580d727)
 
@@ -82,6 +82,6 @@ DATABASES = {
 
 кратко это всё. Остальное можете изучить уже в репозитории.
 
-Было желание сделать и Api, но решил, что вынесу пример работы с api в отдельный проект.
+Было желание сделать и Api с ngninx, но решил, что вынесу пример работы с api в отдельный проект.
 
 Хорошего дня!
