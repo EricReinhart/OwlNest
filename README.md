@@ -44,7 +44,7 @@ Challenges I faced during development may seem funny to an experienced developer
 1: Dockerfile, docker-compose with PostgreSQL. The problems were with the proper connection of web and db services and correct display.
 
 2: Everything related to static files and uploads at different stages. Display and connection through the same Docker. 
-I understand that this is a production problem on a local machine, and all this routine works differently on a finished project.
+I understand that this is a development problem on a local machine, and all this routine works differently on a finished project.
 
 3: Split settings. I set it up for the first time, and everything that could go wrong went wrong.
 
@@ -97,7 +97,7 @@ DATABASES = {
 Задачи с которыми я столкнулся во время разработки, для опытного разработчика, возможно, могли бы показаться привычными, но для неопытного разработчика могут стать настоящими проблемами. Очень много дало понимания разных мелочей и глубины разработки:
 1 dockerfile, dockercompose через postgresql. Проблемы заключались в нормальном подключении web и db сервисов между собой и правильным отображением.
 2 Всё что связано со staticfiles и uploads, на разных этапах. Отображение, подключение через тот же докер. 
-При этом понимаю, что это проблемы продакшена на локальной машине, вся эта рутина работает по другому на уже готовом проекте.
+При этом понимаю, что это проблемы разработки на локальной машине, вся эта рутина работает по другому на уже готовом проекте.
 3 split settings. Первый раз настраивал это всё. И всё что могло пойти не так, шло не так =)
 
 кратко это всё. Остальное можете изучить уже в репозитории.
